@@ -10,12 +10,9 @@ from keras.applications.vgg16 import preprocess_input , decode_predictions
 from keras.models import load_model
 import numpy as np
 import cv2
-# from google.colab.patches import cv2_imshow
 from keras import backend as K
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
-
-# Import your machine learning model module
 
 
 app = Flask(__name__)
@@ -36,7 +33,6 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Check if an image file is uploaded
     if 'image' not in request.files:
         return render_template('main_page_heatmap.html', message='No image file uploaded')
     
@@ -44,7 +40,7 @@ def predict():
     # Read the image file from the request
     image_file = request.files['image']
     img_data = base64.b64encode(image_file.read()).decode()
-    # Ensure the file is a valid image
+    
     if image_file.filename == '':
         return render_template('main_page_heatmap.html', message='No image file selected')
     
@@ -90,30 +86,6 @@ def predict():
     
 def image_to_data_url(image , heatmap):
     """Converts a PIL Image to a data URL."""
-    # with io.BytesIO() as buffer:
-        # Convert image to mode 'RGB' before saving as PNG
-    # image_data = image.read()
-    # nparr = np.frombuffer(image_data, np.uint8)
-    # try:
-    #   img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    # except Exception as e:
-    #   print("Error decoding image:", e)
-    
-    # heatmap = cv2.resize(heatmap, (img_np.shape[1], img_np.shape[0]))
-    # heatmap = np.uint8(255 * heatmap)
-    # heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-    # superimposed_img = heatmap * 0.5 + img
-    # superimposed_img = np.clip(superimposed_img , 0 , 255)
-    # cv2.imshow(superimposed_img)
-    
-    # # Convert the figure to a PNG image
-    # buffer = io.BytesIO()
-    # cv2.imwrite(buffer, image, format='png')
-    # buffer.seek(0)
-        
-    # data_uri = base64.b64encode(buffer.getvalue()).decode()
-    # return 'data:image/png;base64,' + data_uri
-
     # Resize the heatmap to match the dimensions of the image
     heatmap = cv2.resize(heatmap, (image.shape[1], image.shape[0]))
 
